@@ -1,11 +1,25 @@
 @echo off
+REM Check if script is running with administrative privileges
+>nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
+
+REM If errorlevel is 0, script is running as administrator, proceed with script execution
+if %errorlevel% equ 0 (
+    goto :admin_check_python
+)
+
+REM If not running as administrator, elevate script and exit
+echo Running script as administrator...
+powershell -command "Start-Process '%0' -Verb RunAs"
+exit /b
+
+:admin_check_python
 
 REM Install Python if not already installed
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
     echo Installing Python...
-    REM Download Python installer (adjust URL as needed)
-    bitsadmin /transfer "PythonInstaller" https://www.python.org/ftp/python/3.9.12/python-3.9.12-amd64.exe %TEMP%\python-3.9.12-amd64.exe
+    REM Download Python installer using curl
+    curl -o %TEMP%\python-3.9.12-amd64.exe https://www.python.org/ftp/python/3.9.12/python-3.9.12-amd64.exe --ssl-no-revoke
     REM Install Python silently
     %TEMP%\python-3.9.12-amd64.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
     REM Check installation
