@@ -23,9 +23,12 @@ def print_message():
 
 if __name__ == "__main__":
     print_message()
-    time.sleep(1)
+    time.sleep(3)  # Mantém a mensagem na tela por 3 segundos
 
     # URL para redirecionamento
     url = "https://flowhooks.digital/"
     webbrowser.open(url)
     print("Você foi redirecionado para o nosso site. Agradecemos pelo seu interesse!")
+
+    # Espera por uma entrada do usuário antes de fechar
+    input("Pressione Enter para sair...")
